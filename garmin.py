@@ -66,3 +66,8 @@ def get_data(username, session, date=None, amount=None):
     url_date = date.strftime('%Y-%m-%d')
     url = f'https://connect.garmin.com/modern/proxy/usersummary-service/usersummary/list/{username}?start=1&limit={amount}&maxDate={url_date}'
     return json.loads(session.get(url).content)
+
+
+def get_monthly_deficit(username, session):
+    monthly_data = get_data(username, session, amount=datetime.date.today().day)
+    return sum(t['consumedKilocalories'] or 0 for t in monthly_data) - sum(t['totalKilocalories'] for t in monthly_data)
