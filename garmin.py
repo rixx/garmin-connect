@@ -71,3 +71,12 @@ def get_data(username, session, date=None, amount=None):
 def get_monthly_deficit(username, session):
     monthly_data = get_data(username, session, amount=datetime.date.today().day)
     return sum(t['consumedKilocalories'] or 0 for t in monthly_data) - sum(t['totalKilocalories'] for t in monthly_data)
+
+
+def show_month(email, password, username):
+    session = log_in(email, password)
+    monthly_data = get_data(username, session, amount=datetime.date.today().day)
+    deficit = [0]
+    for element in monthly_data[::-1]:
+        deficit.append(deficit[-1] + (element['consumedKilocalories'] - element['totalKilocalories']))
+    return deficit[1:]
