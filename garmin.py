@@ -1,3 +1,4 @@
+import calendar
 import datetime
 import json
 import re
@@ -75,8 +76,15 @@ def get_monthly_deficit(username, session):
 
 def show_month(email, password, username):
     session = log_in(email, password)
-    monthly_data = get_data(username, session, amount=datetime.date.today().day)
-    deficit = [0]
-    for element in monthly_data[::-1]:
-        deficit.append(deficit[-1] + (element['consumedKilocalories'] - element['totalKilocalories']))
-    return deficit[1:]
+    today = datetime.date.today()
+    monthly_data = get_data(username, session, amount=today.day)
+    deficit = sum(element['consumedKilocalories'] - element['totalKilocalories'] for element in monthly_data[1:])
+    weight = abs(deficit / 7000)
+    days_in_month = calendar.monthrange(today.year, today.month)[1]
+    projected_weight = abs((deficit / (today.day - 1) * days_in_month) / 7000)
+    print(f'Your total monthly deficit (excluding today) is {deficit} kcal, which is {deficit/(today.day - 1)} per day.')
+
+    if deficit > 0:
+        print(f'You have effectively gained {round(weight, 1)} kg, and would gain {round(projected_weight, 1)} kg until the end of this month.')
+    else:
+        print(f'You have effectively lost {round(weight, 1)} kg, and would lose {round(projected_weight, 1)} kg until the end of this month.')
