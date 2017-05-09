@@ -82,7 +82,7 @@ def show_month(email, password, username):
     weight = abs(deficit / 7000)
     days_in_month = calendar.monthrange(today.year, today.month)[1]
     projected_weight = abs((deficit / (today.day - 1) * days_in_month) / 7000)
-    print(f'Your total monthly deficit (excluding today) is {deficit} kcal, which is {deficit/(today.day - 1)} per day.')
+    print(f'Your total monthly deficit (excluding today) is {round(deficit, 1)} kcal, which is {round(deficit/(today.day - 1), 1)} per day.')
 
     if deficit > 0:
         print(f'You have effectively gained {round(weight, 1)} kg, and would gain {round(projected_weight, 1)} kg until the end of this month.')
