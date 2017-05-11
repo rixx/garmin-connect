@@ -52,10 +52,10 @@ def log_in(email, password):
     soup = bs4.BeautifulSoup(response.content, 'html.parser')
     payload = {r['name']: r.get('value', True) for r in soup.find('form').findAll('input')}
     payload.update({'username': email, 'password': password})
-    response = s.post('https://sso.garmin.com' + soup.find('form').attrs['action'], data=payload)
+    response = s.post(login_url, data=payload)
     'Invalid' in response.content.decode()
     'SUCCESS' in response.content.decode()
-    response_url = re.search("response_url\s*=\s*'(.*)';", response.content.decode()).groups()[0]
+    response_url = re.search('response_url\s*=\s*"(.*)";', response.content.decode()).groups()[0]
     response_url = response_url.replace("\/", "/")
     s.get(response_url)
     return s
