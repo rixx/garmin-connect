@@ -78,7 +78,7 @@ def show_month(email, password, username):
     session = log_in(email, password)
     today = datetime.date.today()
     monthly_data = get_data(username, session, amount=today.day)
-    deficit = sum(element['consumedKilocalories'] - element['totalKilocalories'] for element in monthly_data[1:])
+    deficit = sum(element['consumedKilocalories'] or 0 - element['totalKilocalories'] or 0 for element in monthly_data[1:])
     weight = abs(deficit / 7000)
     days_in_month = calendar.monthrange(today.year, today.month)[1]
     projected_weight = abs((deficit / (today.day - 1) * days_in_month) / 7000)
